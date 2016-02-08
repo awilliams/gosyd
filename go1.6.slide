@@ -1,26 +1,13 @@
 Go 1.6 release party
-YOUR MEETUP
+goMAD
 17 Feb 2016
 
-YOUR NAME
-@YOURTWITTER
+Adam Williams
+@ac5w
+
+* Source
+Adapted from go Sydney user group presentation:
 http://talks.godoc.org/github.com/davecheney/gosyd/go1.6.slide
-
-* DRAFT 
-
-THIS IS A DRAFT PRESENTATION
-
-Source: [[https://github.com/davecheney/gosyd/blob/master/go1.6.slide]]
-
-PLEASE SEND CORRECTIONS / ADDITIONS BEFORE FEB 17
-
-* DEMONSTRATIONS
-
-THE CODE SAMPLES IN THIS SLIDE DECK REQUIRE GO 1.6
-
-THE WILL NOT WORK FROM TALKS.GOLANG.ORG UNTIL AFTER GO 1.6 IS RELEASED
-
-TO RUN THEM LOCALLY YOU WILL NEED GO 1.6BETA1 OR LATER
 
 * Welcome
 
@@ -31,16 +18,6 @@ There are NNN Go user groups taking part, you can find [[https://github.com/gola
 This presentation is based _heavily_ on the [[http://tip.golang.org/doc/go1.6][official Go 1.6 release notes]].
 
 This presentation contains lots of links to further reading. You can find it online, [[http://talks.godoc.org/github.com/davecheney/gosyd/go1.6.slide][talks.godoc.org/github.com/davecheney/gosyd/go1.6.slide]]
-
-* Go 1.6
-
-The latest Go release, version 1.6, arrives six months after 1.5.
-
-Most of its changes are in the implementation of the language, runtime, and libraries. There are no changes to the language specification.
-
-As always, the release maintains the [[http://tip.golang.org/doc/go1compat.html][Go 1 compatability guarentee]].
-
-Almost all Go programs are expected to continue to compile and run as before.
 
 * The Go project by the numbers
 
@@ -57,6 +34,24 @@ Release timeline:
 - Go 1.4 released 10th December, 2014
 - [[https://talks.golang.org/2015/state-of-go.slide#8][Go 1.5]] released 19th August, 2015
 - Go 1.6 is expected to be released February, 2016
+
+* Go 1.6
+
+The latest Go release, version 1.6, arrives six months after 1.5.
+
+* Changes to the language
+
+_None._
+
+_This_is_a_feature._
+
+_-_ https://talks.golang.org/2016/state-of-go.slide#6
+
+As always, the release maintains the [[http://tip.golang.org/doc/go1compat.html][Go 1 compatibility guarantee]].
+
+Most of its changes are in the implementation of the language, runtime, and libraries. There are no changes to the language specification.
+
+Almost all Go programs are expected to continue to compile and run as before.
 
 * Supported platforms
 
@@ -78,7 +73,7 @@ In the future:
 As of Go 1.5, you no longer need to 'bless' your Go install before cross compiling—it just works*.
 
     # cross compile from your machine to Windows
-    env GOOS=windows go build $YOURPACKAGE 
+    env GOOS=windows go build $YOURPACKAGE
 
 This works with the binary release from the [[https://golang.org/dl/][golang.org]].
 
@@ -97,7 +92,7 @@ The new collector trades throughput for reduced latency.
 
 Allocations pay (in terms of time) a little up front to reduce the time taken to clean up later, this reduces the overall time the gc has to stop the world.
 
-For Go 1.6, a lot of work went into optimising and tuning the gc, enabling far larger heaps to be managed within the 10ms latency goal.
+For Go 1.6, a lot of work went into optimizing and tuning the gc, enabling far larger heaps to be managed within the 10ms latency goal.
 
 * Go 1.5
 
@@ -125,6 +120,26 @@ Read more
 
 - [[https://http2.golang.org/][HTTP/2 demo site]] (powered by Go)
 - [[https://www.youtube.com/watch?v=gukAZO1fqZQ][Here is a video of Brad Fitzpatrick giving an overview of Go 1.6's HTTP/2 support]] at the London Go Gathering in 2015.
+
+* HTTP/2 (cont.)
+
+HTTP/1.1 has been in use for 15+ years (June 1999).
+
+Why HTTP/2?
+
+* Sprites
+
+.video go1.6/sprite-demo.mp4 video/mp4 400 600
+
+TODO: Example
+
+Why make 1 single image and not use individual images?
+
+HTTP/2
+
+- Same high level concepts:
+- Methods (GET, POST, PUT, ...), Status Codes (404, 200, ...), Headers (Content-Type, ...), URIs.
+
 
 * Sharing pointers between Go and C
 
@@ -196,7 +211,7 @@ Read more:
 
 - [[http://dave.cheney.net/2015/11/29/a-whirlwind-tour-of-gos-runtime-environment-variables#GOTRACEBACK][A whirlwind tour of Go’s runtime environment variables]]
 
-* Windows timer resolution 
+* Windows timer resolution
 
 On Windows, Go programs in Go 1.5 and earlier forced the global Windows timer resolution to 1ms at startup by calling `timeBeginPeriod(1)`.
 
@@ -364,13 +379,13 @@ For "native" builds, you can control this setting with
 
 Read more
 
-- [[https://golang.org/pkg/net/#hdr-Name_Resolution][Name resolution section]] of the `net` package documentation. 
+- [[https://golang.org/pkg/net/#hdr-Name_Resolution][Name resolution section]] of the `net` package documentation.
 
 * os
 
 The os package's IsExist, IsNotExist, and IsPermission now return correct results when inquiring about an SyscallError.
 
-This is useful if you have an unknown error value and want 
+This is useful if you have an unknown error value and want
 
 On Unix-like systems, when a write to os.Stdout or os.Stderr (more precisely, an os.File opened for file descriptor 1 or 2) fails due to a broken pipe error, the program will raise a SIGPIPE signal. By default this will cause the program to exit; this may be changed by calling the os/signal Notify function for syscall.SIGPIPE. A write to a broken pipe on a file descriptor other 1 or 2 will simply return syscall.EPIPE (possibly wrapped in os.PathError and/or os.SyscallError) to the caller.
 
