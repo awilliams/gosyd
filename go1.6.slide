@@ -41,6 +41,12 @@ Today (Feb 17th) is an attempt at a release party for Go 1.6 involving as many G
 - _Used_in_production_for_microservices_and_DevOps_tools,_currently_hurdling_more_than_1M_users_per_day_
 - _Porté_Go_a_Plan_9_en_la_Raspberry_Pi._He_escrito_un_compilador_de_un_lenguaje_para_enseñanza_(picky)_multiplataforma_usando_go_y_Go_yacc._He_desarrollado_mucho_software_para_los_predecesores_de_Go_(Plan_9,_inferno),_parte_con_los_propios_desarrolladores_de_Go_(recover_con_Russ,_por_ejemplo)._Imparto_clases_de_compiladores_y_sistemas_distribuidos_en_go._
 
+* go (in 1 slide)
+
+Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.
+
+.play go1.6/go.go
+
 * The Go project by the numbers
 
 Go was announced as an open source project November 10th, 2009.
