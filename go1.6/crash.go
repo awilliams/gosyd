@@ -17,7 +17,7 @@ func main() {
 		wg.Add(1)
 		go func(i int) {
 			for j := 0; j < i; j++ {
-				m[i]++ // HL
+				m[i]++ // Concurrent access // HL
 			}
 			wg.Done()
 		}(i)

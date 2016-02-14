@@ -61,6 +61,8 @@ Release timeline:
 
 The latest Go release, version 1.6, arrives six months after 1.5.
 
+Most likely sometime this month.
+
 * Changes 1.5.x -> 1.6
 
 - Language
@@ -269,7 +271,13 @@ An important effect of this change is that *original* copies of packages are now
 
 The go vet command now diagnoses passing function or method values as arguments to Printf, such as when passing f where f() was intended.
 
-.code go1.6/vet.go
+.play go1.6/vet.go
+
+`go`vet` output:
+
+	main.go:8: arg foo in Println call is a function value, not a function call
+
+The warning can be removed using `%p` in the format string.
 
 * Runtime
 
@@ -294,6 +302,8 @@ The runtime has added lightweight, best-effort detection of concurrent misuse of
 _-_ _Go1.6_Release_Notes_
 
 No performance penalty.
+
+.image go1.6/biplane.jpg _ 350
 
 * Runtime - Maps
 
@@ -342,11 +352,15 @@ It is now possible to trim spaces around template actions, which can make templa
 
 A minus sign at the beginning of an action says to trim space before the action, and a minus sign at the end of an action says to trim space after the action.
 
-.play go1.6/template.go
+.play go1.6/template/whitespace.go /const/,/Execute/
+
+.play go1.6/template/strip.go /const/,/Execute/
 
 * Standard Library - Template
 
 The new {{block}} action, combined with allowing redefinition of named templates, provides a simple way to define pieces of a template that can be replaced in different instantiations.
+
+.image go1.6/gopher.png 250 _
 
 * Standard Library - Template
 
@@ -428,6 +442,5 @@ HTTP/2 - 1s Latency
 HTTP/1.x - 1s Latency
 .video go1.6/http2/http1.1slatency.mp4 video/mp4 _ 925
 
-* FIN
-.image go1.6/party-gopher.png _ 300
-.caption 1.6 party!!!
+* fin
+.image go1.6/party-gopher.png
