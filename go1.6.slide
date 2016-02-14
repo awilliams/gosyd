@@ -1,29 +1,30 @@
-Go 1.6 release party
+Go 1.6 Release Party
 goMAD
 17 Feb 2016
 
 Adam Williams
 @ac5w
 
-* Source
-Adapted from go Sydney user group presentation:
-http://talks.godoc.org/github.com/davecheney/gosyd/go1.6.slide
+* Sources
+
+- http://talks.godoc.org/github.com/davecheney/gosyd/go1.6.slide
+Adapted from the go Sydney user group presentation (That presentation is based _heavily_ on the [[http://tip.golang.org/doc/go1.6][official Go 1.6 release notes]]):
+
+- https://talks.golang.org/2016/state-of-go.slide
+Francesc Campoy's presentation _State_of_Go_ talk at FOSDEM
 
 * Welcome
 
 Today (Feb 17th) is an attempt at a release party for Go 1.6 involving as many Go user groups as possible.
 
-There are NNN Go user groups taking part, you can find [[https://github.com/golang/go/wiki/Go-1.6-release-party#whos-involved][a list of them here]].
-
-This presentation is based _heavily_ on the [[http://tip.golang.org/doc/go1.6][official Go 1.6 release notes]].
-
-This presentation contains lots of links to further reading. You can find it online, [[http://talks.godoc.org/github.com/davecheney/gosyd/go1.6.slide][talks.godoc.org/github.com/davecheney/gosyd/go1.6.slide]]
+.image go1.6/Go_release_party_1.6_wide.png _ 600
+.caption Frédéric Menez - Digikong.io
 
 * The Go project by the numbers
 
 Go was announced as an open source project November 10th, 2009.
 
-Releases occur on a ~6 month cadence with several bug fix point releases between each major release.
+Releases occur every ~6 months, with several bug fix point releases between each major release.
 
 Release timeline:
 
@@ -39,21 +40,57 @@ Release timeline:
 
 The latest Go release, version 1.6, arrives six months after 1.5.
 
+* Changes 1.5.x -> 1.6
+
+- Language
+- Platforms
+- Tooling
+- Runtime
+- Standard Library
+
 * Changes to the language
 
-_None._
+* Changes to the language
 
-_This_is_a_feature._
+None.
+
+This is a feature.
 
 _-_ https://talks.golang.org/2016/state-of-go.slide#6
 
-As always, the release maintains the [[http://tip.golang.org/doc/go1compat.html][Go 1 compatibility guarantee]].
+* Changes to the language
 
 Most of its changes are in the implementation of the language, runtime, and libraries. There are no changes to the language specification.
 
+As always, the release maintains the [[http://tip.golang.org/doc/go1compat.html][Go 1 compatibility guarantee]].
+
+    "It is intended that programs written to the Go 1 specification will continue to compile
+    and run correctly, unchanged, over the lifetime of that specification. At some indefinite
+    point, a Go 2 specification may arise, but until that time, Go programs that work today
+    should continue to work even as future "point" releases of Go 1 arise (Go 1.1, Go 1.2, etc.).
+
+    The APIs may grow, acquiring new packages and features, but not in a way that
+    breaks existing Go 1 code."
+
+
+
 Almost all Go programs are expected to continue to compile and run as before.
 
-* Supported platforms
+* Platforms
+
+* New Ports in 1.6
+
+- Adds experimental ports to Linux on 64-bit MIPS (linux/mips64 and linux/mips64le). These ports support cgo but only with internal linking. Note that this is 64 bit MIPS, not the older 32 bit MIPS commonly found in routers.
+
+- Adds an experimental port to Android on 32-bit x86 (android/386).
+
+- On FreeBSD, Go 1.6 defaults to using clang, not gcc, as the external C compiler.
+
+- On Linux on little-endian 64-bit PowerPC (linux/ppc64le), Go 1.6 now supports cgo with external linking and is roughly feature complete.
+
+- On NaCl, Go 1.5 required SDK version pepper-41. Go 1.6 adds support for later SDK versions.
+
+* Supported Platforms
 
 Go 1.6 supports the following operating systems:
 
@@ -67,6 +104,145 @@ In the future:
 
 - s390x (IBM Z series) planned for Go 1.7
 - RISC-V may be on the horizon
+
+* Tooling
+
+* Tooling - cgo
+
+Cgo enables the creation of Go packages that call C code.
+
+.image go1.6/appenginegopher.jpg _ 600
+.caption https://golang.org/doc/gopher/appenginegopher.jpg
+
+* Tooling - cgo
+
+The major change is the definition of rules for sharing Go pointers with C code, to ensure that such C code can coexist with Go's garbage collector.
+
+Go and C may share memory allocated by Go when
+
+- a pointer to that memory is passed to C as part of a cgo call,
+- and provided that the memory itself contains no pointers to Go-allocated memory,
+- and provided that C does not retain the pointer after the call returns.
+
+These rules are checked by the runtime during program execution: if the runtime detects a violation, it prints a diagnosis and crashes the program.
+
+The checks can be disabled by setting the environment variable `GODEBUG=cgocheck=0`, but note that disabling the checks will typically only lead to more mysterious failure modes.
+
+Fixing the code in question should be strongly preferred over turning off the checks.
+
+* Tooling - cgo
+
+.play go1.6/cgo.go
+
+* Tooling - parser
+
+Externally the compiler toolchain is mostly unchanged compared to Go 1.5.
+
+Internally, the most significant change is that the parser is now hand-written instead of generated from yacc.
+
+Removes
+
+  //go:generate go tool yacc go.y
+
+* Tooling - linker
+
+In Go 1.5 the linker's -X flag changed.
+
+In Go 1.4 and earlier, it took two arguments, as in
+
+    -X importpath.name value
+
+Go 1.5 added an alternative syntax using a single argument that is itself a name=value pair:
+
+    -X importpath.name=value
+
+In Go 1.5 the old syntax was still accepted, after printing a warning suggesting use of the new syntax instead. Go 1.6 continues to accept the old syntax and print the warning. Go 1.7 will remove support for the old syntax.
+
+* Tooling - linker
+
+    package main
+
+    import "fmt"
+
+    var Version = "No Version Provided"
+
+    func main() {
+        fmt.Printf("App Version: %s\n", Version)
+    }
+
+Set when compiling:
+
+    go build -ldflags "-X main.Version 1.2.3" // BAD
+    go build -ldflags "-X main.Version=1.2.3" // GOOD
+
+* Tooling - go
+
+GO15VENDOREXPERIMENT is now enabled by default.
+
+Go 1.5 introduced experimental support for vendoring, enabled by setting the `GO15VENDOREXPERIMENT` environment variable to 1
+
+    GO15VENDOREXPERIMENT=1 go build // 1.5 vendoring disabled by default
+
+Go 1.6 keeps the vendoring support, no longer considered experimental, and enables it by default.
+
+    go build                        // 1.6 vendoring enabled by default
+
+In Go 1.7, the environment variable will stop having any effect.
+
+* Tooling - go
+
+How does _vendoring_ work?
+
+	/home/user/
+	    src/
+	        server-one/
+	            main.go            (import "github.com/gorilla/mux")
+	        server-two/
+	            main.go            (import "github.com/gorilla/mux")
+	            vendor/
+	                github.com/
+	                    gorilla/
+	                        mux/
+	                            ...
+
+`server-one` uses the `mux` package in `$GOPATH/src/github.com/gorilla/mux`.
+
+`server-two` uses the `mux` package in `vendor`.
+
+More subtle cases exist. See [[https://golang.org/s/go15vendor]] for more info.
+
+* Tooling - go doc
+
+Usage:
+
+    go doc [-u] [-c] [package|[package.]symbol[.method]]
+
+Doc prints the documentation comments associated with the item identified by its arguments (a package, const, func, type, var, or method) followed by a one-line summary of each of the first-level items "under" that item (package-level declarations for a package, methods for a type, etc.).
+
+* Tooling - go doc
+
+Go 1.5 added the possibility of searching by name
+
+	go doc math Pi
+
+Go 1.6 defines priority of packages with import paths with less elements.
+
+An important effect of this change is that *original* copies of packages are now *preferred* over *vendored* copies. Successful searches also tend to run faster.
+
+* Runtime
+
+* Standard Library
+
+* Standard Library - HTTP/2
+
+- TODO
+
+* Standard Library - Template
+
+- TODO
+
+* Standard Library - Sort
+
 
 * Cross compilation
 
@@ -140,48 +316,6 @@ HTTP/2
 - Same high level concepts:
 - Methods (GET, POST, PUT, ...), Status Codes (404, 200, ...), Headers (Content-Type, ...), URIs.
 
-
-* Sharing pointers between Go and C
-
-The major change is the definition of rules for sharing Go pointers with C code, to ensure that such C code can coexist with Go's garbage collector.
-
-Go and C may share memory allocated by Go when
-
-- a pointer to that memory is passed to C as part of a cgo call,
-- and provided that the memory itself contains no pointers to Go-allocated memory,
-- and provided that C does not retain the pointer after the call returns.
-
-These rules are checked by the runtime during program execution: if the runtime detects a violation, it prints a diagnosis and crashes the program.
-
-The checks can be disabled by setting the environment variable `GODEBUG=cgocheck=0`, but note that disabling the checks will typically only lead to more mysterious failure modes.
-
-Fixing the code in question should be strongly preferred over turning off the checks.
-
-* Sharing pointers between Go and C (cont.)
-
-.play go1.6/cgo.go
-
-* Compiler Toolchain
-
-Externally the compiler toolchain is mostly unchanged compared to Go 1.5.
-
-Internally, the most significant change is that the parser is now hand-written instead of generated from yacc.
-
-The new SSA compiler backend is slated to land, for amd64 only at this stage, in Go 1.7.
-
-* Changes to the -X flag
-
-In Go 1.5 the linker's -X flag changed.
-
-In Go 1.4 and earlier, it took two arguments, as in
-
-    -X importpath.name value
-
-Go 1.5 added an alternative syntax using a single argument that is itself a name=value pair:
-
-    -X importpath.name=value
-
-In Go 1.5 the old syntax was still accepted, after printing a warning suggesting use of the new syntax instead. Go 1.6 continues to accept the old syntax and print the warning. Go 1.7 will remove support for the old syntax.
 
 * maps panic if you misuse them
 
@@ -414,3 +548,26 @@ In Go 1.6, Parse now also rejects February 29 in non-leap years, February 30, Fe
 
 .play go1.6/parse.go
 
+
+* ¿Cuál es su experiencia con Go?
+- _NIGUNA_
+- _Se_que_existe_xD_
+- _Aun_no_mucha..._
+- _Absolutely_nothing._
+- _Acabo_de_empezar_a_aprenderlo_en_mi_tiempo_libre,_me_llama_muchísimo_la_atención_:)_
+- _Escasa_
+- _Lo_básico_
+- _just_starting_=)_
+- _Experiencia_en_proyectos_personales_pequeños,_experimentos..._
+- _Muchas_pruebas,_tutoriales,_videos,_scripting..._nada_en_producción_:(_
+- _Ninguna,_me_gustaría_conocer_las_experiencias_de_otros_
+- _Poco_
+
+* ¿Cuál es su experiencia con Go?
+- _Empecé_a_juguetear_en_2013,_hasta_acabar_en_2015_desarrollando_profesionalmente_Go_full-time._
+- _Used_in_production_for_microservices_and_DevOps_tools,_currently_hurdling_more_than_1M_users_per_day_
+- _Porté_Go_a_Plan_9_en_la_Raspberry_Pi._He_escrito_un_compilador_de_un_lenguaje_para_enseñanza_(picky)_multiplataforma_usando_go_y_Go_yacc._He_desarrollado_mucho_software_para_los_predecesores_de_Go_(Plan_9,_inferno),_parte_con_los_propios_desarrolladores_de_Go_(recover_con_Russ,_por_ejemplo)._Imparto_clases_de_compiladores_y_sistemas_distribuidos_en_go._
+
+* Fin
+.image go1.6/party-gopher.png _ 300
+.caption Join the party!!!
