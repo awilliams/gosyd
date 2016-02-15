@@ -63,12 +63,6 @@ Release timeline:
 - [[https://talks.golang.org/2015/state-of-go.slide#8][Go 1.5]] released 19th August, 2015
 - Go 1.6 is expected to be released February, 2016
 
-* Go 1.6
-
-The latest Go release, version 1.6, arrives six months after 1.5.
-
-Most likely sometime this month.
-
 * Changes 1.5.x -> 1.6
 
 - Language
@@ -237,31 +231,6 @@ How does _vendoring_ work?
 `server-two` uses the `mux` package in `vendor`.
 
 More subtle cases exist. See [[https://golang.org/s/go15vendor]] for more info.
-
-* Tooling - go
-
-If you're used to doing
-
-   % cd $GOPATH/github.com/you/repo
-   % go test ./...
-
-Be aware that vendored packages, like
-
-   $GOPATH/github.com/you/repo/vendor/github.com/them/repo
-
-Will match the go tool glob operator `...`, and probably cause the test to fail.
-
-The workaround is to filter out vendored packages by name
-
-   go test $(go list ./... | grep -v /vendor/)
-
-* Tooling - go doc
-
-Usage:
-
-    go doc [-u] [-c] [package|[package.]symbol[.method]]
-
-Doc prints the documentation comments associated with the item identified by its arguments (a package, const, func, type, var, or method) followed by a one-line summary of each of the first-level items "under" that item (package-level declarations for a package, methods for a type, etc.).
 
 * Tooling - go doc
 

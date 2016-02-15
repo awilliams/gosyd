@@ -1,18 +1,21 @@
 package main
 
 /*
-int fn(void* arg) { return arg == 0; }
+int fn(void* arg) { return 42; }
 */
 import "C"
-import "unsafe"
+import (
+	"fmt"
+	"unsafe"
+)
 
 type T struct{ a, b int }
 type X struct{ t *T }
 
 func main() {
 	t := T{a: 1, b: 2}
-	C.fn(unsafe.Pointer(&t))
+	fmt.Println(C.fn(unsafe.Pointer(&t)))
 
-	x := X{t: &t} // Holds pointer to x // HL
-	C.fn(unsafe.Pointer(&x))
+	//x := X{t: &t} // Holds pointer to x // HL
+	//fmt.Println(C.fn(unsafe.Pointer(&x)))
 }
