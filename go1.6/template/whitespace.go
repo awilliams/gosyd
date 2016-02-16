@@ -4,8 +4,7 @@ import "text/template"
 import "os"
 
 func main() {
-	const tmpl = `
-{{ range . }}
+	const tmpl = `{{ range . }}
 {{ . }}
 {{ end }}`
 	t := template.Must(template.New("").Parse(tmpl))

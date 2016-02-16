@@ -5,21 +5,6 @@ goMAD
 Adam Williams
 @ac5w
 
-* Sources
-
-- http://talks.godoc.org/github.com/davecheney/gosyd/go1.6.slide
-Adapted from the go Sydney user group presentation (That presentation is based _heavily_ on the [[http://tip.golang.org/doc/go1.6][official Go 1.6 release notes]]):
-
-- https://talks.golang.org/2016/state-of-go.slide
-Francesc Campoy's presentation _State_of_Go_ talk at FOSDEM
-
-* Welcome
-
-Today (Feb 17th) is an attempt at a release party for Go 1.6 involving as many Go user groups as possible.
-
-.image go1.6/Go_release_party_1.6_wide.png _ 600
-.caption Frédéric Menez - Digikong.io
-
 * ¿Cuál es su experiencia con Go?
 
 - _NIGUNA_
@@ -46,6 +31,21 @@ Today (Feb 17th) is an attempt at a release party for Go 1.6 involving as many G
 Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.
 
 .play go1.6/go.go
+
+* Sources
+
+- http://talks.godoc.org/github.com/davecheney/gosyd/go1.6.slide
+Adapted from the go Sydney user group presentation (That presentation is based _heavily_ on the [[http://tip.golang.org/doc/go1.6][official Go 1.6 release notes]]):
+
+- https://talks.golang.org/2016/state-of-go.slide
+Francesc Campoy's presentation _State_of_Go_ talk at FOSDEM
+
+* Welcome
+
+Today (Feb 17th) is an attempt at a release party for Go 1.6 involving as many Go user groups as possible.
+
+.image go1.6/Go_release_party_1.6_wide.png _ 600
+.caption Frédéric Menez - Digikong.io
 
 * The Go project by the numbers
 
@@ -246,7 +246,7 @@ An important effect of this change is that *original* copies of packages are now
 
 The go vet command now diagnoses passing function or method values as arguments to Printf, such as when passing f where f() was intended.
 
-.play go1.6/vet.go
+.code go1.6/vet.go
 
 `go`vet` output:
 

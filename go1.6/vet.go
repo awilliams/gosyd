@@ -1,7 +1,10 @@
 package server
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hello, %s\n", r.UserAgent)
+	fmt.Fprintf(w, "Hello, %s\n", r.UserAgent)
 }
