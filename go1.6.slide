@@ -155,16 +155,6 @@ Fixing the code in question should be strongly preferred over turning off the ch
 
 .play go1.6/cgo.go
 
-* Tooling - parser
-
-Externally the compiler toolchain is mostly unchanged compared to Go 1.5.
-
-Internally, the most significant change is that the parser is now hand-written instead of generated from yacc.
-
-Removed from parser:
-
-  //go:generate go tool yacc go.y
-
 * Tooling - linker
 
 In Go 1.5 the linker's -X flag changed.
